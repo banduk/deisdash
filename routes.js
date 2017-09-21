@@ -6,6 +6,7 @@ import {
 } from 'react-router'
 import App from './containers/App'
 import Auth from './containers/Auth'
+import GoogleAuthCallback from './containers/GoogleAuthCallback'
 import Dash from './containers/Dash'
 import Apps from './containers/Apps'
 import Profile from './containers/Profile'
@@ -15,6 +16,7 @@ export default (
   <Route path="/" component={App}>
     <IndexRoute component={Auth} />
     <Route path="about" component={Auth} />
+    <Route path="ga_callback" component={GoogleAuthCallback} />
     {/* logged in router */}
     <Route path="dash" component={Dash}>
       <IndexRedirect to="apps" />
