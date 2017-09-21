@@ -32,15 +32,15 @@ const buildOpts = (opts, method, token) => {
   }
 }
 
-const buildURL = (path, controller, versionStr, noTrailingSlash = false) => {
+const buildURL = (path, controller, versionStr, noTrailingSlash = false, skipVersion = false) => {
   // TODO: improve this
   const version = Number(versionStr) >= 2 ? 2 : 1
   // normalize path (remove leading slash, add trailing slash)
   const p1 = path.split('/').filter(part => part !== '').join('/')
   const p2 = p1 === '/' || p1 === '' ? '' : `${p1}/`
   const p3 = noTrailingSlash ? p2.slice(0, -1) : p2
-  const url = resolve(controller, `v${version}/${p3}`)
-  return url
+  const final = skipVersion ? p3 : `v${version}/${p3}`
+  return resolve(controller, final)
 }
 
 const mapState = (s) => {
@@ -87,12 +87,12 @@ const client = ['get', 'put', 'post', 'del', 'head', 'options'].reduce((obj, met
     // TODO: noTrailingSlash not so elegant... lets remove that and make sure we use the
     // right paths everywhere
 
-    const noTrailingSlash = opts.noTrailingSlash
+    const { noTrailingSlash, skipVersion } = opts
     const { controller, version, token } = mapState(getState())
     const verb = mapMethodToVerb(method)
 
     const args = [
-      buildURL(path, controller, version, noTrailingSlash),
+      buildURL(path, controller, version, noTrailingSlash, skipVersion),
       buildOpts(opts, verb, token),
     ]
     return fetch(...args).catch((err) => {
@@ -106,9 +106,9 @@ const client = ['get', 'put', 'post', 'del', 'head', 'options'].reduce((obj, met
         return response.text().then((text) => [response, text])
       }
       return response.json().catch(() => null).then((json) => [response, json])
-    }).then(([response, json]) => (
+    }).then(([response, json]) => {
       dispatch(mapResponse(response, json, baseAction))
-    )).catch((err) => {
+    }).catch((err) => {
       if (err.isFetchError) {
         return dispatch({ ...baseAction, payload: err.message ? err.message : err, error: true })
       }
@@ -149,13 +149,16 @@ export const listUsers = () => (
   client.get('/users')
 )
 
-export const login = (username, password) => (
-  client.post('/auth/login', { body: { username, password } }, {
+export const login = (code, redirect_uri) => (
+  client.post(`/google_auth/authenticate/?code=${code}&redirect_uri=${redirect_uri}`, {
+    skipVersion: true,
+    noTrailingSlash: true,
+  }, {
     mapResponse: (response, json, baseAction) => {
       if (json && json.token) {
         return {
           ...baseAction,
-          payload: { username, token: json.token },
+          payload: { username: json.email.split("@")[0], token: json.token },
           success: true,
         }
       }
@@ -165,6 +168,7 @@ export const login = (username, password) => (
         error: true,
       }
     },
+    action: { type: "POST_AUTH_LOGIN" },
   })
 )
 

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { routeActions } from 'react-router-redux'
 import { Link } from 'react-router'
 import classnames from 'classnames'
+import GoogleButton from 'react-google-button'
 
 import Controller from './Controller'
 import Register from './Register'
@@ -13,6 +14,15 @@ import AboutModal from './AboutModal'
 // import logoImg from '../../static/deis-logo.png'
 import animationGif from '../../static/animation.gif'
 import deisDashLogo from '../../static/deis-dash-logo-md.png'
+
+import ClientOAuth2 from 'client-oauth2'
+
+const googleAuth = new ClientOAuth2({
+  clientId: process.env.GOOGLE_AUTH_CLIENT_ID,
+  authorizationUri: 'https://accounts.google.com/o/oauth2/v2/auth',
+  redirectUri: process.env.GOOGLE_AUTH_REDIRECT_URL,
+  scopes: ['email', 'profile'],
+})
 
 const modals = ['about']
 
@@ -75,7 +85,7 @@ class Auth extends Component {
                 <Controller />
               </div>
             </div>
-            <div className={classnames({ 'text-center': true, hide: validController || isElectron })}>
+            <div className={classnames({ 'text-center': true, hide: validController || isElectron })} style={{"margin-bottom": "20px"}}>
               <img
                 src={animationGif}
                 alt="deisdash animation"
@@ -83,19 +93,10 @@ class Auth extends Component {
                 height="404"
               />
             </div>
-            <div>
-              <div className={className}>
-                <div className="box">
-                  <h3>Login</h3>
-                  <Login />
-                </div>
-              </div>
-              <div className={className}>
-                <div className="box">
-                  <h3>Register</h3>
-                  <Register />
-                </div>
-              </div>
+            <div className="col-md-12">
+              <GoogleButton onClick={() => {
+                window.location = googleAuth.code.getUri()
+              }} />
             </div>
           </div>
         </div>
