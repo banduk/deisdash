@@ -10,6 +10,8 @@ var constantsPlugin = new webpack.DefinePlugin({
   'process.env.VERSION': JSON.stringify(pkg.version),
   'process.env.DEFAULT_CONTROLLER': JSON.stringify(process.env.DEFAULT_CONTROLLER),
   'process.env.GA': JSON.stringify(process.env.GA),
+  'process.env.GOOGLE_AUTH_REDIRECT_URL': process.env.GOOGLE_AUTH_REDIRECT_URL,
+  'process.env.GOOGLE_AUTH_CLIENT_ID': process.env.GOOGLE_AUTH_CLIENT_ID,
 })
 
 module.exports = {

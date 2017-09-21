@@ -6,7 +6,7 @@
     "start": "node server.js",
     "start:prod": "NODE_ENV=production node server.js",
     "start:electron": "electron ./electron/main.js",
-    "build": "GOOGLE_AUTH_CLIENT_ID=$GOOGLE_AUTH_CLIENT_ID GOOGLE_AUTH_REDIRECT_URL=$GOOGLE_AUTH_REDIRECT_URL NODE_ENV=production webpack -p --config webpack.build.config.js",
+    "build": "NODE_ENV=production webpack -p --config webpack.build.config.js",
     "build:electron": "ELECTRON=1 NODE_ENV=production webpack -p --config webpack.electron.config.js",
     "postinstall": "npm run build",
     "package:clean": "rm -rf ./electron/installers/* && rm -rf ./electron/packages",
