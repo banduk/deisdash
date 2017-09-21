@@ -93,7 +93,7 @@ class Auth extends Component {
                 height="404"
               />
             </div>
-            <div className="col-md-12">
+            <div className="col-md-12 google-button-wrapper">
               <GoogleButton onClick={() => {
                 window.location = googleAuth.code.getUri()
               }} />

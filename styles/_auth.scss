@@ -60,4 +60,9 @@ $gray-semi-light: lighten($gray-base, 70%);
       color: #666;
     }
   }
+
+  .google-button-wrapper {
+    display: flex;
+    justify-content: center;
+  }
 }
