@@ -22,6 +22,10 @@ const googleAuth = new ClientOAuth2({
   authorizationUri: 'https://accounts.google.com/o/oauth2/v2/auth',
   redirectUri: process.env.GOOGLE_AUTH_REDIRECT_URL,
   scopes: ['email', 'profile'],
+  query: {
+    access_type: 'offline',
+    prompt: 'consent'
+  },
 })
 
 const modals = ['about']
@@ -71,32 +75,32 @@ class Auth extends Component {
             {/*
               TODO...
               <a href="/installers/Deis%20Dash.dmg" className="btn btn-link">Mac App (preview!)</a>
-            */}
-            <Link to="/about" className="btn btn-link">About</Link>
-          </div>
-          <div className="text-center header">
-            <img src={deisDashLogo} alt="deis logo" />
-            <span> Deis Dash</span>
-            <span className="version">{version}</span>
-          </div>
-          <div className="">
-            <div className="col-md-12">
-              <div className="box">
-                <Controller />
+              */}
+              <Link to="/about" className="btn btn-link">About</Link>
+            </div>
+            <div className="text-center header">
+              <img src={deisDashLogo} alt="deis logo" />
+              <span> Deis Dash</span>
+              <span className="version">{version}</span>
+            </div>
+            <div className="">
+              <div className="col-md-12">
+                <div className="box">
+                  <Controller />
+                </div>
               </div>
-            </div>
-            <div className={classnames({ 'text-center': true, hide: validController || isElectron })} style={{"margin-bottom": "20px"}}>
-              <img
-                src={animationGif}
-                alt="deisdash animation"
-                width="730"
-                height="404"
-              />
-            </div>
-            <div className="col-md-12 google-button-wrapper">
-              <GoogleButton onClick={() => {
-                window.location = googleAuth.code.getUri()
-              }} />
+              <div className={classnames({ 'text-center': true, hide: validController || isElectron })} style={{"margin-bottom": "20px"}}>
+                <img
+                  src={animationGif}
+                  alt="deisdash animation"
+                  width="730"
+                  height="404"
+                />
+              </div>
+              <div className="col-md-12 google-button-wrapper">
+                <GoogleButton onClick={() => {
+                  window.location = googleAuth.code.getUri()
+                }} />
             </div>
           </div>
         </div>
